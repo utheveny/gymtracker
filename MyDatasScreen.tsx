@@ -4,7 +4,7 @@ import { View, Text } from 'react-native';
 const MyDatasScreen: React.FC = () => {
   return (
     <View>
-      <Text>Contenu de Mon Programme</Text>
+      <Text>Mes donnees</Text>
     </View>
   );
 };

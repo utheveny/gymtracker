@@ -4,18 +4,21 @@ import { StyleSheet, Text, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MyTrainingScreen from './MyTrainingScreen';
 import MyDatasScreen from './MyDatasScreen';
+import { NavigationContainer } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Tab.Navigator>
-        <Tab.Screen name="Mon programme" component={MyTrainingScreen} />
-        <Tab.Screen name="Mes données" component={MyDatasScreen} />
-      </Tab.Navigator>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <View style={styles.container}>
+        <Tab.Navigator>
+          <Tab.Screen name="Mon programme" component={MyTrainingScreen} />
+          <Tab.Screen name="Mes données" component={MyDatasScreen} />
+        </Tab.Navigator>
+        <StatusBar style="auto" />
+      </View>
+    </NavigationContainer>
   );
 }
 
