@@ -8,6 +8,7 @@ import {
   TextInput,
   StyleSheet,
 } from "react-native";
+import { styles } from './styles';
 
 export default function MyTrainingScreen() {
   // List
@@ -55,7 +56,7 @@ export default function MyTrainingScreen() {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text>Mes Programmes</Text>
       <Text>Mes séances :</Text>
       <FlatList
@@ -144,33 +145,3 @@ export default function MyTrainingScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Fond semi-transparent
-  },
-  modalContent: {
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 10,
-    width: "80%",
-  },
-  listItemContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-  },
-  listItemText: {
-    flex: 1,
-    marginRight: 10,
-  },
-  listItemButtons: {
-    flexDirection: "row",
-  },
-});
