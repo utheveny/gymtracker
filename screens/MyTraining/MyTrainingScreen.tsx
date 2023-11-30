@@ -11,16 +11,19 @@ export default function MyTrainingScreen() {
   // List
   const [sessions, setSessions] = useState<Session[]>([]);
 
-  //Create Modal related
+  //Create Session Modal related
   const [isCreateModalVisible, setCreateModalVisible] =
     useState<boolean>(false);
   const [newSession, setNewSession] = useState<string>("");
 
-  //Edit Modal related
+  //Edit Session Modal related
   const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [editedSession, setEditedSession] = useState<string>("");
+  const [editingIndex, setEditingIndex] = useState<number>(-1);
+  const [currentEditingSession, setCurrentEditingSession] =
+    useState<Session | null>(null);
   const [editedExercises, setEditedExercises] = useState<string[]>([]);
+
+  //Add Exercise Modal related
   const [isAddExerciseModalVisible, setAddExerciseModalVisible] =
     useState<boolean>(false);
   const [newExercise, setNewExercise] = useState<string>("");
@@ -39,19 +42,19 @@ export default function MyTrainingScreen() {
 
   const handleEditSession = (index: number, session: Session) => {
     setEditingIndex(index);
-    setEditedSession(session.name);
+    setCurrentEditingSession(session);
     setEditedExercises(session.exercises);
     setEditModalVisible(true);
   };
 
   const handleEditSessionConfirm = () => {
-    if (editingIndex !== null) {
+    if (editingIndex !== -1 && currentEditingSession) {
       const updatedSessions = [...sessions];
-      updatedSessions[editingIndex].name = editedSession;
+      updatedSessions[editingIndex] = currentEditingSession;
       setSessions(updatedSessions);
-      setEditingIndex(null);
+      setEditingIndex(-1);
+      setCurrentEditingSession(null);
     }
-    setEditedSession("");
     setEditModalVisible(false);
   };
 
@@ -66,8 +69,15 @@ export default function MyTrainingScreen() {
   };
 
   const handleAddExercise = () => {
-    if (newExercise.trim() !== "") {
-      setEditedExercises([...editedExercises, newExercise]);
+    if (newExercise.trim() !== "" && currentEditingSession) {
+      const updatedExercises = [
+        ...currentEditingSession.exercises,
+        newExercise,
+      ];
+      setCurrentEditingSession({
+        ...currentEditingSession,
+        exercises: updatedExercises,
+      });
       setNewExercise("");
       setAddExerciseModalVisible(false);
     }
@@ -77,6 +87,12 @@ export default function MyTrainingScreen() {
     const updatedExercises = [...editedExercises];
     updatedExercises.splice(index, 1);
     setEditedExercises(updatedExercises);
+    if (currentEditingSession) {
+      setCurrentEditingSession({
+        ...currentEditingSession,
+        exercises: updatedExercises,
+      });
+    }
   };
 
   return (
@@ -85,7 +101,7 @@ export default function MyTrainingScreen() {
       <Text>Mes séances :</Text>
       <FlatList
         data={sessions}
-        keyExtractor={(index) => index.toString()}
+        keyExtractor={(item) => item.name}
         renderItem={({ index, item }) => {
           return (
             <View style={styles.listItemContainer}>
@@ -127,12 +143,11 @@ export default function MyTrainingScreen() {
               onChangeText={(text) => setNewSession(text)}
               value={newSession}
             />
-            <Button title="Ajouter" onPress={handleAddSession} />
+            <Button title="Ajouter" onPress={() => handleAddSession} />
             <Button
               title="Annuler"
               onPress={() => {
                 setNewSession("");
-                setEditedSession("");
                 setCreateModalVisible(false);
               }}
             />
@@ -148,12 +163,19 @@ export default function MyTrainingScreen() {
         onRequestClose={() => setEditModalVisible(false)}
       >
         <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
+          <View style={styles.modalEditContent}>
             <Text>Modifier Séance</Text>
             <TextInput
               placeholder="Nom de la séance"
-              onChangeText={(text) => setEditedSession(text)}
-              value={editedSession}
+              onChangeText={(text) => {
+                if (currentEditingSession) {
+                  setCurrentEditingSession({
+                    ...currentEditingSession,
+                    name: text,
+                  });
+                }
+              }}
+              value={currentEditingSession?.name || ""}
             />
 
             {/* Exerices */}
@@ -166,54 +188,53 @@ export default function MyTrainingScreen() {
                   <Text style={styles.listItemText}>{item}</Text>
                   <Button
                     title="Supprimer"
-                    onPress={() => handleOpenAddExerciseModal()}
+                    onPress={() => handleDeleteExercise(index)}
                   />
                 </View>
               )}
             />
             <Button
               title="Ajouter un exercice"
-              onPress={() => setAddExerciseModalVisible(true)}
+              onPress={() => handleOpenAddExerciseModal()}
             />
 
-            <Button title="Modifier" onPress={handleEditSessionConfirm} />
+            <Button title="Modifier" onPress={() => handleEditSessionConfirm} />
             <Button
               title="Annuler"
               onPress={() => {
                 setNewSession("");
-                setEditedSession("");
                 setEditModalVisible(false);
               }}
             />
           </View>
         </View>
-      </Modal>
 
-      {/* Add exercice modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isAddExerciseModalVisible}
-        onRequestClose={() => setAddExerciseModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text>Ajouter un exercice</Text>
-            <TextInput
-              placeholder="Nom de l'exercice"
-              onChangeText={(text) => setNewExercise(text)}
-              value={newExercise}
-            />
-            <Button title="Ajouter" onPress={handleAddExercise} />
-            <Button
-              title="Annuler"
-              onPress={() => {
-                setNewExercise("");
-                setAddExerciseModalVisible(false);
-              }}
-            />
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={isAddExerciseModalVisible}
+          onRequestClose={() => setAddExerciseModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text>Ajouter un exercice</Text>
+              <TextInput
+                placeholder="Nom de l'exercice"
+                onChangeText={(text) => setNewExercise(text)}
+                value={newExercise}
+              />
+              <Button title="Ajouter" onPress={() => handleAddExercise()} />
+
+              <Button
+                title="Annuler"
+                onPress={() => {
+                  setNewExercise("");
+                  setAddExerciseModalVisible(false);
+                }}
+              />
+            </View>
           </View>
-        </View>
+        </Modal>
       </Modal>
     </View>
   );

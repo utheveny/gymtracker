@@ -9,6 +9,11 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)", // Fond semi-transparent
   },
+  modalEditContent: {
+    backgroundColor: "white",
+    height: "100%",
+    width: "100%",
+  },
   modalContent: {
     backgroundColor: "white",
     padding: 20,
