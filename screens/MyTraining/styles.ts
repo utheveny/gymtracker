@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
   },
   modalEditContent: {
     backgroundColor: "white",
-    height: "100%",
+    height: "80%",
     width: "100%",
   },
   modalContent: {

@@ -23,8 +23,7 @@ export default function MyTrainingScreen() {
   const [editedExercises, setEditedExercises] = useState<string[]>([]);
 
   //Add Exercise Modal related
-  const [isAddExerciseModalVisible, setAddExerciseModalVisible] =
-    useState<boolean>(false);
+  const [isAddExerciseInputVisible, setAddExerciseInputVisible] = useState<boolean>(false);
   const [newExercise, setNewExercise] = useState<string>("");
 
   const handleAddSession = () => {
@@ -51,10 +50,6 @@ export default function MyTrainingScreen() {
     setSessions(updatedSessions);
   };
 
-  const handleOpenAddExerciseModal = () => {
-    setAddExerciseModalVisible(true);
-  };
-
   const handleAddExercise = () => {
     if (newExercise.trim() !== "" && currentEditingSession) {
       const updatedExercises = [...editedExercises, newExercise];
@@ -64,7 +59,6 @@ export default function MyTrainingScreen() {
         exercises: updatedExercises,
       });
       setNewExercise("");
-      setAddExerciseModalVisible(false);
     }
   };
 
@@ -140,6 +134,7 @@ export default function MyTrainingScreen() {
         </View>
       </Modal>
 
+      {/* Edit Modal */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -176,9 +171,25 @@ export default function MyTrainingScreen() {
                 </View>
               )}
             />
+
+            {isAddExerciseInputVisible && (
+              <View>
+                <TextInput
+                  placeholder="Nom de l'exercice"
+                  onChangeText={(text) => setNewExercise(text)}
+                  value={newExercise}
+                />
+                <Button title="Ajouter" onPress={handleAddExercise} />
+              </View>
+            )}
+
             <Button
-              title="Ajouter un exercice"
-              onPress={() => handleOpenAddExerciseModal()}
+              title={
+                isAddExerciseInputVisible ? "Annuler" : "Ajouter un exercice"
+              }
+              onPress={() =>
+                setAddExerciseInputVisible(!isAddExerciseInputVisible)
+              }
             />
 
             <Button
@@ -190,33 +201,6 @@ export default function MyTrainingScreen() {
             />
           </View>
         </View>
-
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={isAddExerciseModalVisible}
-          onRequestClose={() => setAddExerciseModalVisible(false)}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text>Ajouter un exercice</Text>
-              <TextInput
-                placeholder="Nom de l'exercice"
-                onChangeText={(text) => setNewExercise(text)}
-                value={newExercise}
-              />
-              <Button title="Ajouter" onPress={() => handleAddExercise()} />
-
-              <Button
-                title="Annuler"
-                onPress={() => {
-                  setNewExercise("");
-                  setAddExerciseModalVisible(false);
-                }}
-              />
-            </View>
-          </View>
-        </Modal>
       </Modal>
     </View>
   );
