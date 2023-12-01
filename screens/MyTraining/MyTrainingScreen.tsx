@@ -18,7 +18,6 @@ export default function MyTrainingScreen() {
 
   //Edit Session Modal related
   const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
-  const [editingIndex, setEditingIndex] = useState<number>(-1);
   const [currentEditingSession, setCurrentEditingSession] =
     useState<Session | null>(null);
   const [editedExercises, setEditedExercises] = useState<string[]>([]);
@@ -41,21 +40,9 @@ export default function MyTrainingScreen() {
   };
 
   const handleEditSession = (index: number, session: Session) => {
-    setEditingIndex(index);
     setCurrentEditingSession(session);
     setEditedExercises(session.exercises);
     setEditModalVisible(true);
-  };
-
-  const handleEditSessionConfirm = () => {
-    if (editingIndex !== -1 && currentEditingSession) {
-      const updatedSessions = [...sessions];
-      updatedSessions[editingIndex] = currentEditingSession;
-      setSessions(updatedSessions);
-      setEditingIndex(-1);
-      setCurrentEditingSession(null);
-    }
-    setEditModalVisible(false);
   };
 
   const handleDeleteSession = (index: number) => {
@@ -70,10 +57,8 @@ export default function MyTrainingScreen() {
 
   const handleAddExercise = () => {
     if (newExercise.trim() !== "" && currentEditingSession) {
-      const updatedExercises = [
-        ...currentEditingSession.exercises,
-        newExercise,
-      ];
+      const updatedExercises = [...editedExercises, newExercise];
+      setEditedExercises(updatedExercises);
       setCurrentEditingSession({
         ...currentEditingSession,
         exercises: updatedExercises,
@@ -143,7 +128,7 @@ export default function MyTrainingScreen() {
               onChangeText={(text) => setNewSession(text)}
               value={newSession}
             />
-            <Button title="Ajouter" onPress={() => handleAddSession} />
+            <Button title="Ajouter" onPress={() => handleAddSession()} />
             <Button
               title="Annuler"
               onPress={() => {
@@ -155,7 +140,6 @@ export default function MyTrainingScreen() {
         </View>
       </Modal>
 
-      {/* Edit Modal */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -178,7 +162,6 @@ export default function MyTrainingScreen() {
               value={currentEditingSession?.name || ""}
             />
 
-            {/* Exerices */}
             <Text>Exercices :</Text>
             <FlatList
               data={editedExercises}
@@ -198,11 +181,10 @@ export default function MyTrainingScreen() {
               onPress={() => handleOpenAddExerciseModal()}
             />
 
-            <Button title="Modifier" onPress={() => handleEditSessionConfirm} />
             <Button
-              title="Annuler"
+              title="Retour"
               onPress={() => {
-                setNewSession("");
+                setCurrentEditingSession(null);
                 setEditModalVisible(false);
               }}
             />
