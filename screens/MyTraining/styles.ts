@@ -1,24 +1,60 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
+  // GENERAL
   container: {
   },
+
+  // MODAL RELATED
   modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Fond semi-transparent
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
-  modalEditContent: {
-    backgroundColor: "white",
-    height: "80%",
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
     width: "100%",
   },
-  modalContent: {
+  modalHeaderText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalHeaderButton: {
+    height: 24,
+    width: 24,
+  },
+
+  // MODAL CREATE
+  modalCreateContent: {
     backgroundColor: "white",
     padding: 20,
     borderRadius: 10,
     width: "80%",
+  },
+
+  // MODAL EDIT
+  modalEdit: {
+    backgroundColor: "white",
+    height: "80%",
+    width: "80%",
+    borderRadius: 10,
+    padding: 20,
+    display: "flex",
+  },
+  modalEditContent: {
+    height: "90%",
+  },
+  modalEditTitle: {
+    width: "100%",
+    fontSize: 14,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
   },
   listItemContainer: {
     flexDirection: "row",
