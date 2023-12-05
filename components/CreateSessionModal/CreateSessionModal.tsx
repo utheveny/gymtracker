@@ -8,7 +8,11 @@ interface CreateSessionModalProps {
   onAddSession: (sessionName: string) => void;
 }
 
-const CreateSessionModal: React.FC<CreateSessionModalProps> = ({ isVisible, onClose, onAddSession }) => {
+const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
+  isVisible,
+  onClose,
+  onAddSession,
+}) => {
   const [newSession, setNewSession] = useState<string>("");
 
   const handleAddSession = () => {
@@ -24,7 +28,6 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({ isVisible, onCl
       animationType="slide"
       transparent={true}
       visible={isVisible}
-      onRequestClose={onClose}
     >
       <View style={styles.modalContainer}>
         <View style={styles.modalCreate}>

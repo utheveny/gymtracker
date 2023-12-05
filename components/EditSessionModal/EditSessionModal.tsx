@@ -2,12 +2,21 @@ import React, { useState } from "react";
 import { View, Text, TextInput, Button, Modal, FlatList } from "react-native";
 import { styles } from "../../screens/MyTraining/styles";
 
+
+interface Exercice {
+  name: string;
+  sets: number;
+  reps: number;
+  rest: number;
+}
+
 interface EditSessionModalProps {
   isVisible: boolean;
   onClose: () => void;
-  onEditSession: (sessionName: string, exercises: string[]) => void;
+  onEditSession: (index: number, sessionName: string, exercises: Exercice[]) => void;
   initialSessionName: string;
-  initialExercises: string[];
+  initialExercises: Exercice[];
+  sessionIndex: number;
 }
 
 const EditSessionModal: React.FC<EditSessionModalProps> = ({
@@ -16,29 +25,40 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
   onEditSession,
   initialSessionName,
   initialExercises,
+  sessionIndex,
 }) => {
   const [editedSessionName, setEditedSessionName] = useState<string>(
     initialSessionName
   );
-  const [editedExercises, setEditedExercises] = useState<string[]>(
+  const [editedExercises, setEditedExercises] = useState<Exercice[]>(
     initialExercises
   );
   const [isAddExerciseInputVisible, setAddExerciseInputVisible] =
     useState<boolean>(false);
-  const [newExercise, setNewExercise] = useState<string>("");
+  const [newExercise, setNewExercise] = useState<Exercice>({
+    name: "",
+    sets: 0,
+    reps: 0,
+    rest: 0,
+  });
 
   const handleEditSession = () => {
     if (editedSessionName.trim() !== "") {
-      onEditSession(editedSessionName, editedExercises);
+      onEditSession(sessionIndex, editedSessionName, editedExercises);
       onClose();
     }
   };
 
   const handleAddExercise = () => {
-    if (newExercise.trim() !== "") {
+    if (newExercise.name.trim() !== "") {
       const updatedExercises = [...editedExercises, newExercise];
       setEditedExercises(updatedExercises);
-      setNewExercise("");
+      setNewExercise({
+        name: "",
+        sets: 0,
+        reps: 0,
+        rest: 0,
+      });
     }
   };
 
@@ -74,7 +94,7 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item, index }) => (
                 <View style={styles.listItemContainer}>
-                  <Text style={styles.listItemText}>{item}</Text>
+                  <Text style={styles.listItemText}>{item.name}</Text>
                   <Button
                     title="Supprimer"
                     onPress={() => handleDeleteExercise(index)}
@@ -86,8 +106,8 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
               <View>
                 <TextInput
                   placeholder="Nom de l'exercice"
-                  onChangeText={(text) => setNewExercise(text)}
-                  value={newExercise}
+                  onChangeText={(text) => setNewExercise({ ...newExercise, name: text })}
+                  value={newExercise.name}
                 />
                 <Button title="Ajouter" onPress={handleAddExercise} />
               </View>
