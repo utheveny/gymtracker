@@ -1,9 +1,8 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   // GENERAL
-  container: {
-  },
+  container: {},
 
   // MODAL RELATED
   modalContainer: {
@@ -30,11 +29,16 @@ export const styles = StyleSheet.create({
   },
 
   // MODAL CREATE
-  modalCreateContent: {
+  modalCreate: {
     backgroundColor: "white",
-    padding: 20,
     borderRadius: 10,
+    padding: 20,
+    display: "flex",
     width: "80%",
+  },
+  modalCreateContent: {
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   // MODAL EDIT

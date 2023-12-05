@@ -120,21 +120,28 @@ export default function MyTrainingScreen() {
         onRequestClose={() => setCreateModalVisible(false)}
       >
         <View style={styles.modalContainer}>
-          <View style={styles.modalCreateContent}>
-            <Text>Nouvelle Séance</Text>
-            <TextInput
-              placeholder="Nom de la séance"
-              onChangeText={(text) => setNewSession(text)}
-              value={newSession}
-            />
-            <Button title="Ajouter" onPress={() => handleAddSession()} />
-            <Button
-              title="Annuler"
-              onPress={() => {
-                setNewSession("");
-                setCreateModalVisible(false);
-              }}
-            />
+          {/* Modal */}
+          <View style={styles.modalCreate}>
+            {/* HEADER */}
+            <View style={styles.modalHeader}>
+              <Button title="X" color="transparent" />
+              <Text style={styles.modalHeaderText}>Nouvelle Séance</Text>
+              <Button
+                title="X"
+                onPress={() => setEditModalVisible(false)}
+                color="#333"
+              />
+            </View>
+
+            {/* CONTENT */}
+            <View style={styles.modalCreateContent}>
+              <TextInput
+                placeholder="Nom de la séance"
+                onChangeText={(text) => setNewSession(text)}
+                value={newSession}
+              />
+              <Button title="Ajouter" onPress={() => handleAddSession()} />
+            </View>
           </View>
         </View>
       </Modal>
@@ -150,13 +157,9 @@ export default function MyTrainingScreen() {
         <View style={styles.modalContainer}>
           {/* Modal */}
           <View style={styles.modalEdit}>
-
             {/* HEADER */}
             <View style={styles.modalHeader}>
-            <Button
-                title="X"
-                color="transparent"
-              />
+              <Button title="X" color="transparent" />
               <TextInput
                 style={styles.modalHeaderText}
                 placeholder="Nom de la séance"
