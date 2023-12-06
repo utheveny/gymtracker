@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Button, Modal, FlatList } from "react-native";
 import { styles } from "../../screens/MyTraining/styles";
 
+interface Session {
+  name: string;
+  exercises: Exercice[];
+}
 
 interface Exercice {
   name: string;
@@ -13,26 +17,22 @@ interface Exercice {
 interface EditSessionModalProps {
   isVisible: boolean;
   onClose: () => void;
-  onEditSession: (index: number, sessionName: string, exercises: Exercice[]) => void;
   initialSessionName: string;
   initialExercises: Exercice[];
-  sessionIndex: number;
+  onUpdateSession: (updatedSession: Session) => void;
 }
 
 const EditSessionModal: React.FC<EditSessionModalProps> = ({
   isVisible,
   onClose,
-  onEditSession,
   initialSessionName,
   initialExercises,
-  sessionIndex,
+  onUpdateSession,
 }) => {
-  const [editedSessionName, setEditedSessionName] = useState<string>(
-    initialSessionName
-  );
-  const [editedExercises, setEditedExercises] = useState<Exercice[]>(
-    initialExercises
-  );
+  const [editedSessionName, setEditedSessionName] =
+    useState<string>(initialSessionName);
+  const [editedExercises, setEditedExercises] =
+    useState<Exercice[]>(initialExercises);
   const [isAddExerciseInputVisible, setAddExerciseInputVisible] =
     useState<boolean>(false);
   const [newExercise, setNewExercise] = useState<Exercice>({
@@ -42,12 +42,10 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
     rest: 0,
   });
 
-  const handleEditSession = () => {
-    if (editedSessionName.trim() !== "") {
-      onEditSession(sessionIndex, editedSessionName, editedExercises);
-      onClose();
-    }
-  };
+  useEffect(() => {
+    setEditedSessionName(initialSessionName);
+    setEditedExercises(initialExercises);
+  }, [initialSessionName, initialExercises]);
 
   const handleAddExercise = () => {
     if (newExercise.name.trim() !== "") {
@@ -59,6 +57,7 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
         reps: 0,
         rest: 0,
       });
+      setAddExerciseInputVisible(false);
     }
   };
 
@@ -66,6 +65,15 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
     const updatedExercises = [...editedExercises];
     updatedExercises.splice(index, 1);
     setEditedExercises(updatedExercises);
+  };
+
+  const handleCloseModal = () => {
+    const updatedSession = {
+      name: editedSessionName,
+      exercises: editedExercises,
+    };
+    onUpdateSession(updatedSession);
+    onClose();
   };
 
   return (
@@ -78,14 +86,14 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
       <View style={styles.modalContainer}>
         <View style={styles.modalEdit}>
           <View style={styles.modalHeader}>
-            <Button title="X" color="transparent" onPress={onClose} />
+            <Button title="X" color="transparent"/>
             <TextInput
               style={styles.modalHeaderText}
               placeholder="Nom de la séance"
               onChangeText={(text) => setEditedSessionName(text)}
               value={editedSessionName}
             />
-            <Button title="X" onPress={onClose} color="#333" />
+            <Button title="X" onPress={handleCloseModal} color="#333" />
           </View>
           <View style={styles.modalEditContent}>
             <Text style={styles.modalEditTitle}>Exercices</Text>
@@ -95,6 +103,11 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
               renderItem={({ item, index }) => (
                 <View style={styles.listItemContainer}>
                   <Text style={styles.listItemText}>{item.name}</Text>
+                  <Text style={styles.listItemText}>Series: {item.sets}</Text>
+                  <Text style={styles.listItemText}>
+                    Repetitions: {item.reps}
+                  </Text>
+                  <Text style={styles.listItemText}>Repos: {item.rest}</Text>
                   <Button
                     title="Supprimer"
                     onPress={() => handleDeleteExercise(index)}
@@ -106,7 +119,9 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
               <View>
                 <TextInput
                   placeholder="Nom de l'exercice"
-                  onChangeText={(text) => setNewExercise({ ...newExercise, name: text })}
+                  onChangeText={(text) =>
+                    setNewExercise({ ...newExercise, name: text })
+                  }
                   value={newExercise.name}
                 />
                 <Button title="Ajouter" onPress={handleAddExercise} />
@@ -121,7 +136,6 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
               }
             />
           </View>
-          <Button title="Enregistrer" onPress={handleEditSession} />
         </View>
       </View>
     </Modal>

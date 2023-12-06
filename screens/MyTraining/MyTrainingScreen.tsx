@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, FlatList, Button, Modal, TextInput } from "react-native";
+import { View, Text, FlatList, Button } from "react-native";
 import { styles } from "./styles";
 import CreateSessionModal from "../../components/CreateSessionModal/CreateSessionModal";
 import EditSessionModal from "../../components/EditSessionModal/EditSessionModal";
@@ -28,9 +28,8 @@ export default function MyTrainingScreen() {
   const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
   const [currentEditingSession, setCurrentEditingSession] =
     useState<Session | null>(null);
-  const [currentEditingSessionIndex, setCurrentEditingSessionIndex] = useState<
-    number | null
-  >(null);
+  const [currentEditingSessionIndex, setCurrentEditingSessionIndex] =
+    useState<number>(-1);
 
   const handleAddSession = (newSessionName: string) => {
     const newSessionObject: Session = {
@@ -46,18 +45,18 @@ export default function MyTrainingScreen() {
     sessionName: string,
     exercises: Exercice[]
   ) => {
-    if (currentEditingSessionIndex !== null) {
-      const updatedSessions = [...sessions];
-      updatedSessions[currentEditingSessionIndex] = {
-        ...currentEditingSession!,
-        name: sessionName,
-        exercises: exercises,
-      };
-      setSessions(updatedSessions);
-      setCurrentEditingSessionIndex(null);
-      setCurrentEditingSession(null);
-    }
-    setEditModalVisible(false);
+    setCurrentEditingSessionIndex(index);
+    setCurrentEditingSession({
+      name: sessionName,
+      exercises: exercises,
+    });
+    setEditModalVisible(true);
+  };
+
+  const handleUpdateSession = (index: number, updatedSession: Session) => {
+    const updatedSessions = [...sessions];
+    updatedSessions[index] = updatedSession;
+    setSessions(updatedSessions);
   };
 
   const handleDeleteSession = (index: number) => {
@@ -66,9 +65,10 @@ export default function MyTrainingScreen() {
     setSessions(updatedSessions);
 
     if (index === currentEditingSessionIndex) {
-      setCurrentEditingSessionIndex(null);
+      setCurrentEditingSessionIndex(-1);
       setCurrentEditingSession(null);
     }
+    console.log(sessions);
   };
 
   return (
@@ -116,24 +116,16 @@ export default function MyTrainingScreen() {
       {/* Edit Modal */}
       <EditSessionModal
         isVisible={isEditModalVisible}
-        onClose={() => setEditModalVisible(false)}
-        onEditSession={(name, exercises) => {
-          if (currentEditingSessionIndex !== null) {
-            const updatedSessions = [...sessions];
-            updatedSessions[currentEditingSessionIndex] = {
-              ...currentEditingSession!,
-              name,
-              exercises,
-            };
-            setSessions(updatedSessions);
-            setCurrentEditingSessionIndex(null);
-            setCurrentEditingSession(null);
-          }
+        onClose={() => {
           setEditModalVisible(false);
+          setCurrentEditingSessionIndex(-1);
+          setCurrentEditingSession(null);
         }}
         initialSessionName={currentEditingSession?.name || ""}
         initialExercises={currentEditingSession?.exercises || []}
-        sessionIndex={currentEditingSessionIndex || 0}
+        onUpdateSession={(updatedSession) =>
+          handleUpdateSession(currentEditingSessionIndex, updatedSession)
+        }
       />
     </View>
   );
