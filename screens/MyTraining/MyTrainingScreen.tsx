@@ -3,18 +3,8 @@ import { View, Text, FlatList, Button } from "react-native";
 import { styles } from "./styles";
 import CreateSessionModal from "../../components/CreateSessionModal/CreateSessionModal";
 import EditSessionModal from "../../components/EditSessionModal/EditSessionModal";
-
-interface Exercice {
-  name: string;
-  sets: number;
-  reps: number;
-  rest: number;
-}
-
-interface Session {
-  name: string;
-  exercises: Exercice[];
-}
+import { Exercice } from "../../types/Exercice";
+import { Session } from "../../types/Session";
 
 export default function MyTrainingScreen() {
   // List
