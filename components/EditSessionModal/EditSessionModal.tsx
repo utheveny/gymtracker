@@ -29,10 +29,13 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
   initialExercises,
   onUpdateSession,
 }) => {
+  //Session related
   const [editedSessionName, setEditedSessionName] =
     useState<string>(initialSessionName);
   const [editedExercises, setEditedExercises] =
     useState<Exercice[]>(initialExercises);
+
+  //Exercices related
   const [isAddExerciseInputVisible, setAddExerciseInputVisible] =
     useState<boolean>(false);
   const [newExercise, setNewExercise] = useState<Exercice>({
@@ -41,6 +44,9 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
     reps: 0,
     rest: 0,
   });
+  const [newExerciseSets, setNewExerciseSets] = useState<number>(0);
+  const [newExerciseReps, setNewExerciseReps] = useState<number>(0);
+  const [newExerciseRest, setNewExerciseRest] = useState<number>(0);
 
   useEffect(() => {
     setEditedSessionName(initialSessionName);
@@ -49,7 +55,12 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
 
   const handleAddExercise = () => {
     if (newExercise.name.trim() !== "") {
-      const updatedExercises = [...editedExercises, newExercise];
+      const updatedExercises = [...editedExercises, {
+        ...newExercise,
+        sets: newExerciseSets,
+        reps: newExerciseReps,
+        rest: newExerciseRest,
+      }];
       setEditedExercises(updatedExercises);
       setNewExercise({
         name: "",
@@ -57,6 +68,9 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
         reps: 0,
         rest: 0,
       });
+      setNewExerciseSets(0);
+      setNewExerciseReps(0);
+      setNewExerciseRest(0);
       setAddExerciseInputVisible(false);
     }
   };
@@ -86,7 +100,7 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
       <View style={styles.modalContainer}>
         <View style={styles.modalEdit}>
           <View style={styles.modalHeader}>
-            <Button title="X" color="transparent"/>
+            <Button title="X" color="transparent" />
             <TextInput
               style={styles.modalHeaderText}
               placeholder="Nom de la séance"
@@ -117,12 +131,34 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
             />
             {isAddExerciseInputVisible && (
               <View>
+                {/* Name */}
                 <TextInput
                   placeholder="Nom de l'exercice"
                   onChangeText={(text) =>
                     setNewExercise({ ...newExercise, name: text })
                   }
                   value={newExercise.name}
+                />
+                {/* Sets */}
+                <TextInput
+                  placeholder="Séries"
+                  keyboardType="numeric"
+                  onChangeText={(text) => setNewExerciseSets(Number(text))}
+                  value={String(newExerciseSets)}
+                />
+                {/* Reps */}
+                <TextInput
+                  placeholder="Répétitions"
+                  keyboardType="numeric"
+                  onChangeText={(text) => setNewExerciseReps(Number(text))}
+                  value={String(newExerciseReps)}
+                />
+                {/* Rest */}
+                <TextInput
+                  placeholder="Repos (s)"
+                  keyboardType="numeric"
+                  onChangeText={(text) => setNewExerciseRest(Number(text))}
+                  value={String(newExerciseRest)}
                 />
                 <Button title="Ajouter" onPress={handleAddExercise} />
               </View>

@@ -68,7 +68,6 @@ export default function MyTrainingScreen() {
       setCurrentEditingSessionIndex(-1);
       setCurrentEditingSession(null);
     }
-    console.log(sessions);
   };
 
   return (
