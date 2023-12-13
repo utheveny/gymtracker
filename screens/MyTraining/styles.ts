@@ -75,4 +75,12 @@ export const styles = StyleSheet.create({
   listItemButtons: {
     flexDirection: "row",
   },
+  trackMark: {
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
