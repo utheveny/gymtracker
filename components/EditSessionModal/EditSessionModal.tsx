@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, Modal, FlatList } from "react-native";
 import { styles } from "../../screens/MyTraining/styles";
 import { Exercice } from "../../types/Exercice";
 import { Session } from "../../types/Session";
+import { Slider } from "@react-native-assets/slider";
 
 interface EditSessionModalProps {
   isVisible: boolean;
@@ -193,31 +194,28 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
                         value={editingExerciseDetails?.name || ""}
                       />
                       {/* Sets */}
-                      <TextInput
-                        placeholder="Séries"
-                        keyboardType="numeric"
-                        onChangeText={(text) =>
-                          handleEditExerciseDetailsChange("sets", text)
-                        }
-                        value={String(newExerciseSets)}
+                      <Slider
+                        minimumValue={1}
+                        maximumValue={5}
+                        step={1}
+                        value={newExerciseSets}
+                        onValueChange={(value) => setNewExerciseSets(value)}
                       />
                       {/* Reps */}
-                      <TextInput
-                        placeholder="Répétitions"
-                        keyboardType="numeric"
-                        onChangeText={(text) =>
-                          handleEditExerciseDetailsChange("reps", text)
-                        }
-                        value={String(newExerciseReps)}
+                      <Slider
+                        minimumValue={1}
+                        maximumValue={20}
+                        step={1}
+                        value={newExerciseReps}
+                        onValueChange={(value) => setNewExerciseReps(value)}
                       />
                       {/* Rest */}
-                      <TextInput
-                        placeholder="Repos (s)"
-                        keyboardType="numeric"
-                        onChangeText={(text) =>
-                          handleEditExerciseDetailsChange("rest", text)
-                        }
-                        value={String(newExerciseRest)}
+                      <Slider
+                        minimumValue={1}
+                        maximumValue={600}
+                        step={1}
+                        value={newExerciseRest}
+                        onValueChange={(value) => setNewExerciseRest(value)}
                       />
                       <Button
                         title="Enregistrer"
@@ -246,26 +244,30 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
                   value={newExercise.name}
                 />
                 {/* Sets */}
-                <TextInput
-                  placeholder="Séries"
-                  keyboardType="numeric"
-                  onChangeText={(text) => setNewExerciseSets(Number(text))}
-                  value={String(newExerciseSets)}
+                <Slider
+                  minimumValue={1}
+                  maximumValue={5}
+                  step={1}
+                  value={newExerciseSets}
+                  onValueChange={(value) => setNewExerciseSets(value)}
                 />
                 {/* Reps */}
-                <TextInput
-                  placeholder="Répétitions"
-                  keyboardType="numeric"
-                  onChangeText={(text) => setNewExerciseReps(Number(text))}
-                  value={String(newExerciseReps)}
+                <Slider
+                  minimumValue={1}
+                  maximumValue={20}
+                  step={1}
+                  value={newExerciseReps}
+                  onValueChange={(value) => setNewExerciseReps(value)}
                 />
                 {/* Rest */}
-                <TextInput
-                  placeholder="Repos (s)"
-                  keyboardType="numeric"
-                  onChangeText={(text) => setNewExerciseRest(Number(text))}
-                  value={String(newExerciseRest)}
+                <Slider
+                  minimumValue={1}
+                  maximumValue={600}
+                  step={1}
+                  value={newExerciseRest}
+                  onValueChange={(value) => setNewExerciseRest(value)}
                 />
+
                 <Button title="Ajouter" onPress={handleAddExercise} />
               </View>
             )}

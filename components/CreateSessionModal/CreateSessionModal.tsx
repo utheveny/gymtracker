@@ -39,6 +39,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
           <View style={styles.modalCreateContent}>
             <TextInput
               placeholder="Nom de la séance"
+              keyboardType="default"
               onChangeText={(text) => setNewSession(text)}
               value={newSession}
             />
